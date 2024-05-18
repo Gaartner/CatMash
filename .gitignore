@@ -1,0 +1,93 @@
+# ASP.NET Core
+bin/
+obj/
+*.user
+*.suo
+*.sln.docstates
+*.vspscc
+*.vssscc
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Rider IDE
+.idea/
+.idea_modules/
+*.iml
+shelf/
+workspace.xml
+contentModel.xml
+projectSettingsUpdater.xml
+.idea.backend.iml
+modules.xml
+
+# Rider: Editor-based HTTP Client requests
+httpRequests/
+
+# Rider: Datasource local storage ignored files
+dataSources/
+dataSources.local.xml
+
+# Visual Studio Code
+.vscode/
+.history/
+
+# Docker
+Dockerfile
+Dockerfile.*
+docker-compose.yml
+docker-compose.override.yml
+.dockerignore
+.docker/
+
+# Node.js/Next.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+.pnpm-debug.log
+.next/
+out/
+*.log
+.cache/
+.cache-loader/
+
+# Environment files
+.env
+.env.*.local
+.env.local
+
+# Log files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production
+build/
+dist/
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+
+# System files
+desktop.ini
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.swp
+*~ 
+
+# Coverage directories
+coverage/
+lcov-report/
+
+# Test result directories
+test-results/
