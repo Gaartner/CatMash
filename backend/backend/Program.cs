@@ -23,6 +23,18 @@ builder.Services.AddSingleton<IVotingRepository, VotingRepository>();
 builder.Services.AddSingleton<ICatService, CatService>();
 builder.Services.AddSingleton<IVotingService, VotingService>();
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
 // Add controller services
 builder.Services.AddControllers();
 
@@ -42,7 +54,13 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure controller routing
+// Configure the HTTP request pipeline
+app.UseRouting();
+
+app.UseCors("AllowAllOrigins");
+
+app.UseAuthorization();
+
 app.MapGet("/", () => "Hello World!");
 app.MapControllers();
 
