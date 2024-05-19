@@ -23,5 +23,11 @@ namespace backend.Core
         /// <param name="catId">The unique identifier of the cat.</param>
         /// <returns>The cat with the specified identifier.</returns>
         Task<Cat> GetCatById(string catId);
+
+        /// <summary>
+        /// Retrieves all cats ordered by their vote count.
+        /// </summary>
+        /// <returns>A list of cats ordered by their vote count.</returns>
+        Task<List<Cat>> GetAllCatsOrderedByVoteCount();
     }
 }

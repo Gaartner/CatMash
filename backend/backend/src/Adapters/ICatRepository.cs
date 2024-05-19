@@ -26,5 +26,18 @@ namespace backend.Adapters
         /// <param name="cat">The cat to save.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
         Task SaveCat(Cat cat);
+
+        /// <summary>
+        /// Updates the vote count of the specified cat.
+        /// </summary>
+        /// <param name="catId">The unique identifier of the cat whose vote count to update.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        Task UpdateCatVoteCount(string catId);
+        
+        /// <summary>
+        /// Retrieves all cats ordered by their vote count.
+        /// </summary>
+        /// <returns>A list of cats ordered by their vote count.</returns>
+        Task<List<Cat>> GetAllCatsOrderedByVoteCount();
     }
 }

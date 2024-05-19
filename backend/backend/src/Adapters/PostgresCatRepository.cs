@@ -21,25 +21,6 @@ namespace backend.Adapters
         }
 
         /// <summary>
-        /// Updates the score of a cat in the database.
-        /// </summary>
-        /// <param name="id">The unique identifier of the cat.</param>
-        /// <param name="newScore">The new score to be assigned to the cat.</param>
-        /// <exception cref="ApplicationException">Thrown when the update operation fails.</exception>
-        public async Task UpdateCatScore(int id, int newScore)
-        {
-            try
-            {
-                string query = "UPDATE \"Cats\" SET \"Score\" = @NewScore WHERE \"Id\" = @Id";
-                await _connection.ExecuteAsync(query, new { Id = id, NewScore = newScore });
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException($"Failed to update score for cat with ID {id} in PostgreSQL database.", ex);
-            }
-        }
-
-        /// <summary>
         /// Retrieves all cats from the database.
         /// </summary>
         /// <returns>A list of all cats.</returns>
@@ -97,6 +78,43 @@ namespace backend.Adapters
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to save cat to PostgreSQL database.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Updates the vote count of the specified cat.
+        /// </summary>
+        /// <param name="id">The unique identifier of the cat whose vote count to update.</param>
+        /// <exception cref="ApplicationException">Thrown when the update operation fails.</exception>
+        public async Task UpdateCatVoteCount(string id)
+        {
+            try
+            {
+                string query = "UPDATE \"Cats\" SET \"Score\" = \"Score\" + 1 WHERE \"Id\" = @Id";
+                await _connection.ExecuteAsync(query, new { Id = id });
+
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Failed to update score for cat with ID {id} in PostgreSQL database.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves all cats ordered by their vote count.
+        /// </summary>
+        /// <returns>A list of cats ordered by their vote count.</returns>
+        /// <exception cref="ApplicationException">Thrown when the retrieval operation fails.</exception>
+        public async Task<List<Cat>> GetAllCatsOrderedByVoteCount()
+        {
+            try
+            {
+                string query = "SELECT * FROM \"Cats\" ORDER BY \"Score\" DESC";
+                return (await _connection.QueryAsync<Cat>(query)).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to retrieve cats ordered by vote count from PostgreSQL database.", ex);
             }
         }
 

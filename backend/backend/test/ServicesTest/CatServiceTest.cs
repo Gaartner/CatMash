@@ -29,22 +29,16 @@ namespace backend.test.ServicesTest
             // Assert
             CollectionAssert.AreEquivalent(expectedCats, actualCats);
         }
-
+        
         [Test]
         public async Task GetCatById_ExistingId_ShouldReturnMatchingCat()
         {
             // Arrange
             string expectedCatId = "1";
-            var expectedCat = new Cat {Id = expectedCatId, Url = "https://example.com/cat1.jpg", Score = 10};
+            var expectedCat = new Cat { Id = expectedCatId, Url = "https://example.com/cat1.jpg", Score = 10 };
 
             var mockCatRepository = new Mock<ICatRepository>();
-            mockCatRepository.Setup(repo => repo.GetAllCats()).ReturnsAsync(new List<Cat>
-            {
-                new Cat {Id = "1", Url = "https://example.com/cat1.jpg", Score = 10},
-                new Cat {Id = "2", Url = "https://example.com/cat2.jpg", Score = 15},
-                new Cat {Id = "3", Url = "https://example.com/cat3.jpg", Score = 20}
-            });
-
+            mockCatRepository.Setup(repo => repo.GetCatById(expectedCatId)).ReturnsAsync(expectedCat); // Mock GetCatById
             var catService = new CatService(mockCatRepository.Object);
 
             // Act
@@ -57,26 +51,6 @@ namespace backend.test.ServicesTest
             ClassicAssert.AreEqual(expectedCat.Score, actualCat.Score);
         }
 
-        [Test]
-        public async Task GetCatById_CatWithSpecifiedIdExists_ShouldReturnMatchingCat()
-        {
-            // Arrange
-            string expectedCatId = "1";
-            var expectedCat = new Cat {Id = expectedCatId, Url = "https://example.com/cat1.jpg", Score = 10};
-            var mockCatRepository = new Mock<ICatRepository>();
-            mockCatRepository.Setup(repo => repo.GetAllCats())
-                .ReturnsAsync(new List<Cat> {expectedCat}); // Chat avec l'ID spécifié dans le repository
-            var catService = new CatService(mockCatRepository.Object);
-
-            // Act
-            var actualCat = await catService.GetCatById(expectedCatId);
-
-            // Assert
-            ClassicAssert.IsNotNull(actualCat);
-            ClassicAssert.AreEqual(expectedCatId, actualCat.Id);
-            ClassicAssert.AreEqual(expectedCat.Url, actualCat.Url);
-            ClassicAssert.AreEqual(expectedCat.Score, actualCat.Score);
-        }
 
         [Test]
         public void GetCatById_CatWithSpecifiedIdDoesNotExist_ShouldThrowException()
@@ -149,6 +123,49 @@ namespace backend.test.ServicesTest
             ClassicAssert.IsNotNull(caughtException);
             ClassicAssert.AreEqual("No cats available.", caughtException.Message);
         }
+        
+        [Test]
+        public async Task GetAllCatsOrderedByVoteCount_Success_ReturnsListOfCatsOrderedByScoreDescending()
+        {
+            var _mockCatRepository = new Mock<ICatRepository>();
+            // Arrange
+            var expectedCats = new List<Cat>
+            {
+                new Cat { Id = "1", Url = "https://example.com/cat1.jpg", Score = 10 },
+                new Cat { Id = "2", Url = "https://example.com/cat2.jpg", Score = 15 },
+                new Cat { Id = "3", Url = "https://example.com/cat3.jpg", Score = 20 }
+            };
+
+            // On trie les chats attendus par ordre décroissant de score
+            expectedCats.Sort((cat1, cat2) => cat2.Score.CompareTo(cat1.Score));
+
+            _mockCatRepository.Setup(repo => repo.GetAllCatsOrderedByVoteCount()).ReturnsAsync(expectedCats);
+            var catService = new CatService(_mockCatRepository.Object);
+
+            // Act
+            var result = await catService.GetAllCatsOrderedByVoteCount();
+
+            // Assert
+            CollectionAssert.AreEqual(expectedCats, result);
+        }
+
+        [Test]
+        public async Task GetAllCatsOrderedByVoteCount_Failure_ThrowsException()
+        {
+            // Arrange
+            var _mockCatRepository = new Mock<ICatRepository>();
+            _mockCatRepository.Setup(repo => repo.GetAllCatsOrderedByVoteCount()).ThrowsAsync(new Exception("Simulated error"));
+            var catService = new CatService(_mockCatRepository.Object);
+
+            // Act & Assert
+            AggregateException caughtException = ClassicAssert.Throws<AggregateException>(() => catService.GetAllCatsOrderedByVoteCount().Wait());
+            ApplicationException innerException = caughtException.InnerException as ApplicationException;
+            ClassicAssert.IsNotNull(innerException);
+            ClassicAssert.AreEqual("Failed to retrieve cats ordered by vote count.", innerException.Message);
+        }
+
+
+
 
     }
 }

@@ -76,5 +76,23 @@ namespace backend.Controllers
             }
             return Ok(randomCat);
         }
+        
+         /// <summary>
+        /// Retrieves all cats ordered by their vote count.
+        /// </summary>
+        /// <returns>A list of cats ordered by vote count.</returns>
+        [HttpGet("OrderedByVoteCount")]
+        public async Task<IActionResult> GetAllCatsOrderedByVoteCount()
+        {
+            try
+            {
+                var cats = await _catService.GetAllCatsOrderedByVoteCount();
+                return Ok(cats);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Failed to retrieve cats ordered by vote count: {ex.Message}");
+            }
+        }
     }
 }

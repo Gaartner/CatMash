@@ -99,5 +99,54 @@ namespace backend.test.ControllersTest
             // Assert
             ClassicAssert.IsInstanceOf<NotFoundResult>(result);
         }
+        
+        [Test]
+        public async Task GetAllCatsOrderedByVoteCount_ShouldReturnOkWithOrderedCats()
+        {
+            // Arrange
+            var expectedCats = new List<Cat>
+            {
+                new Cat { Id = "1", Url = "https://example.com/cat1.jpg", Score = 10 },
+                new Cat { Id = "2", Url = "https://example.com/cat2.jpg", Score = 15 },
+                new Cat { Id = "3", Url = "https://example.com/cat3.jpg", Score = 20 }
+            };
+            _mockCatService.Setup(service => service.GetAllCatsOrderedByVoteCount()).ReturnsAsync(expectedCats);
+
+            // Act
+            var result = await _controller.GetAllCatsOrderedByVoteCount();
+
+            // Assert
+            ClassicAssert.IsInstanceOf<OkObjectResult>(result);
+            var okResult = result as OkObjectResult;
+            ClassicAssert.IsNotNull(okResult);
+            ClassicAssert.AreEqual(expectedCats, okResult.Value);
+        }
+
+        [Test]
+        public async Task GetAllCatsOrderedByVoteCount_WhenExceptionThrown_ShouldReturnInternalServerError()
+        {
+            // Arrange
+            _mockCatService.Setup(service => service.GetAllCatsOrderedByVoteCount()).ThrowsAsync(new Exception("Simulated error"));
+
+            // Act
+            var result = await _controller.GetAllCatsOrderedByVoteCount();
+
+            // Assert
+            ClassicAssert.IsTrue(result is ObjectResult || result is StatusCodeResult);
+            if (result is StatusCodeResult statusCodeResult)
+            {
+                ClassicAssert.AreEqual(500, statusCodeResult.StatusCode);
+            }
+            else if (result is ObjectResult objectResult)
+            {
+                ClassicAssert.AreEqual(500, objectResult.StatusCode);
+            }
+            else
+            {
+                ClassicAssert.Fail("Unexpected result type.");
+            }
+        }
+
+
     }
 }

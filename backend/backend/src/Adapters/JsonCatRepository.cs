@@ -55,5 +55,17 @@ namespace backend.Adapters
             // Saving cats is not supported in JSON storage.
             throw new NotSupportedException("Saving cats is not supported in JSON storage.");
         }
+
+        public Task UpdateCatVoteCount(string Id)
+        {
+            // This operation is not supported for this repository.
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Cat>> GetAllCatsOrderedByVoteCount()
+        {
+            // This operation is not supported for this repository.
+            throw new NotImplementedException();
+        }
     }
 }
