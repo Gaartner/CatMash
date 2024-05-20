@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import endpoints from "../../utils/endpoints";
 
 const VotePage = () => {
   const [cats, setCats] = useState([]);
@@ -7,12 +8,8 @@ const VotePage = () => {
   useEffect(() => {
     const fetchInitialCats = async () => {
       try {
-        const res1 = await fetch(
-          "https://localhost:7114/api/CatControllers/Random"
-        );
-        const res2 = await fetch(
-          "https://localhost:7114/api/CatControllers/Random"
-        );
+        const res1 = await fetch(`${endpoints.catApi}CatControllers/Random`);
+        const res2 = await fetch(`${endpoints.catApi}CatControllers/Random`);
 
         if (!res1.ok || !res2.ok) {
           throw new Error("Failed to fetch data");
@@ -31,7 +28,7 @@ const VotePage = () => {
 
   const handleVote = async (catId) => {
     try {
-      const res = await fetch(`https://localhost:7114/api/Voting/${catId}`, {
+      const res = await fetch(`${endpoints.catApi}Voting/${catId}`, {
         method: "POST",
       });
 
@@ -41,9 +38,7 @@ const VotePage = () => {
 
       const votedCat = cats.find((cat) => cat.id === catId);
 
-      const newCatRes = await fetch(
-        "https://localhost:7114/api/CatControllers/Random"
-      );
+      const newCatRes = await fetch(`${endpoints.catApi}CatControllers/Random`);
       if (newCatRes.ok) {
         const newCat = await newCatRes.json();
         setCats((prevCats) => {

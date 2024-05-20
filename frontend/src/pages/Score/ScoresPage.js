@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import endpoints from "../../utils/endpoints";
 
 const CatPage = () => {
   const [cats, setCats] = useState([]);
@@ -8,7 +9,7 @@ const CatPage = () => {
     const fetchCats = async () => {
       try {
         const response = await axios.get(
-          "https://localhost:7114/api/CatControllers/OrderedByVoteCount"
+          `${endpoints.catApi}CatControllers/OrderedByVoteCount`
         );
         setCats(response.data);
       } catch (error) {
