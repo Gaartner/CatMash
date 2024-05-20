@@ -1,15 +1,21 @@
-// src/App.js
 import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import ScoresPage from "./pages/ScoresPage";
-//import VotePage from "./pages/VotePage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import HomePage from "./pages/Home/HomePage";
+import ScoresPagePage from "./pages/Score/ScoresPage";
+import VotePage from "./pages/Voting/VotePage";
 
-const App = () => {
+function App() {
   return (
     <Router>
-      <ScoresPage />
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/score" element={<ScoresPagePage />} />
+        <Route path="/vote" element={<VotePage />} />
+      </Routes>
     </Router>
   );
-};
+}
 
 export default App;

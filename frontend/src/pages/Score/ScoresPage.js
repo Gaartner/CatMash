@@ -1,34 +1,26 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const ScoresPage = () => {
+const CatPage = () => {
   const [cats, setCats] = useState([]);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCats = async () => {
       try {
-        const res = await fetch(
+        const response = await axios.get(
           "https://localhost:7114/api/CatControllers/OrderedByVoteCount"
         );
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data = await res.json();
-        setCats(data);
+        setCats(response.data);
       } catch (error) {
-        setError("Failed to fetch cats");
+        console.error("Failed to fetch cats:", error);
       }
     };
 
-    fetchData();
+    fetchCats();
   }, []);
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
-    <main>
+    <div>
       <h1>Cat Scores</h1>
       <ul>
         {cats.map((cat) => (
@@ -38,8 +30,8 @@ const ScoresPage = () => {
           </li>
         ))}
       </ul>
-    </main>
+    </div>
   );
 };
 
-export default ScoresPage;
+export default CatPage;
